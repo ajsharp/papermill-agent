@@ -1,8 +1,7 @@
 require 'singleton'
 require 'timeout'
 require 'json'
-
-# 13 on 517 frenchman st
+require 'restclient'
 
 module Papermill
 

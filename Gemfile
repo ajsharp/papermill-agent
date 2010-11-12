@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rest-client', '1.6.1', :require => 'restclient'
+gem 'rest-client', '~>1.6.1'
 
 group :test do
   gem 'fakeweb',  '>=1.3.0'
