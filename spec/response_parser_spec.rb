@@ -17,7 +17,7 @@ module Papermill
     end
 
     def store
-      Storage.store.last[:payload]
+      Storage.store.last
     end
 
     it "adds the parsed response to papermill's storage mechanism" do
