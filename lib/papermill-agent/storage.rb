@@ -8,6 +8,10 @@ module Papermill
   # Agent class.
   class Storage < Array
     include Singleton
+
+    def self.store
+      instance
+    end
   end
 
 end

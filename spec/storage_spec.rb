@@ -4,12 +4,18 @@ module Papermill
 
   describe 'adding an item to the local data storage' do
     it 'acts like an array' do
-      Storage.instance.should respond_to(:<<)
+      Storage.store.should respond_to(:<<)
     end
 
     it 'stores data' do
-      Storage.instance << 'some data'
-      Storage.instance.should include 'some data'
+      Storage.store << 'some data'
+      Storage.store.should include 'some data'
+    end
+  end
+
+  describe 'the store' do
+    it 'wraps the singleton instance' do
+      Storage.store == Storage.instance
     end
   end
 
