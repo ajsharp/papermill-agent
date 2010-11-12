@@ -52,7 +52,7 @@ module Papermill
     def do_request
       begin
         RestClient.post API_ENDPOINT, { :api_key => config['token'], :payload => jsonify_payload }
-      rescue RestClient::Exception
+      rescue RestClient::Exception, Errno::ECONNREFUSED
       end
     end
 
