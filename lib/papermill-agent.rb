@@ -8,3 +8,4 @@ module Papermill
   autoload :Storage,        'papermill-agent/storage'
 end
 
+Papermill::Agent.instance.start
