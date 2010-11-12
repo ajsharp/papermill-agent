@@ -26,6 +26,7 @@ module Papermill
 
     def start
       @last_sent = Time.now
+      Thread.abort_on_exception = true
       @worker_thread = Thread.new do
         loop do
           if time_since_last_sent > 10
