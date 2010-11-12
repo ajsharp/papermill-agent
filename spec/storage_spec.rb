@@ -19,4 +19,16 @@ module Papermill
     end
   end
 
+  describe 'emptying the cache' do
+    before { Storage.clear }
+
+    it 'clears out the storage' do
+      Storage.store << 'stuff'
+      Storage.store.should == ['stuff']
+
+      Storage.clear
+      Storage.store.should == []
+    end
+  end
+
 end

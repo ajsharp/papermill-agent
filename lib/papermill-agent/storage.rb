@@ -9,8 +9,14 @@ module Papermill
   class Storage < Array
     include Singleton
 
-    def self.store
-      instance
+    class << self
+      def store
+        instance
+      end
+
+      def clear
+        store.clear
+      end
     end
   end
 
