@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/ajsharp/papermill-agent"
   s.summary = "Client agent for papermillapp.com"
   s.description = "Client agent for papermillapp.com"
+  s.add_runtime_dependency("rest-client", ["~>1.6.1"])
 
   s.extra_rdoc_files = [
     "README.md"
