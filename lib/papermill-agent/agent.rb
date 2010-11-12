@@ -42,9 +42,17 @@ module Papermill
     end
 
     def send_data_to_papermill
-      Timeout.timeout(UPDATE_INTERVAL - 1) do
-        api_key = config['token']
-        RestClient.post API_ENDPOINT, { :api_key => api_key, :payload => jsonify_payload }
+      begin
+        Timeout.timeout(3) { do_request }
+      rescue Timeout::Error
+        p 'timeout error'
+      end
+    end
+
+    def do_request
+      begin
+        RestClient.post API_ENDPOINT, { :api_key => config['token'], :payload => jsonify_payload }
+      rescue RestClient::Exception
       end
     end
 
