@@ -14,18 +14,12 @@ module Papermill
     # send new request data every 10 seconds
     UPDATE_INTERVAL = 10
 
-    attr_reader :last_sent
-
-    def mutex
-      @mutex ||= Mutex.new
-    end
-
-    def config
-      @config ||= YAML.load_file('config/papermill.yml')
-    end
+    attr_reader :last_sent, :mutex, :config
 
     def start
       @last_sent = Time.now
+      @mutex     = Mutex.new
+      @config    = YAML.load_file('config/papermill.yml')
       Thread.abort_on_exception = true
       @worker_thread = Thread.new do
         loop do
