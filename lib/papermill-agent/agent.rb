@@ -44,7 +44,7 @@ module Papermill
 
     def send_data_to_papermill
       begin
-        Timeout.timeout(3) { do_request }
+        Timeout.timeout(9) { do_request }
       rescue Timeout::Error
         p 'timeout error'
       end
