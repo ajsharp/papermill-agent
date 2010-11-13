@@ -25,6 +25,7 @@ module Papermill
       @worker_thread = Thread.new do
         loop do
           if time_since_last_sent > 10
+            p "sending #{Storage.store.count} requests to papermill..."
             send_data_to_papermill
             @last_sent = Time.now
           end
@@ -54,6 +55,7 @@ module Papermill
       begin
         RestClient.post API_ENDPOINT, { :api_key => config['token'], :payload => jsonify_payload }
       rescue RestClient::Exception, Errno::ECONNREFUSED
+        p 'transmission error ocurred...'
       end
     end
 
