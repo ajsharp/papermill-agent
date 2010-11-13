@@ -10,6 +10,8 @@ module Papermill
     include Singleton
 
     class << self
+      # TODO: We need a mutex sync around adding items to storage
+
       def store
         instance
       end
