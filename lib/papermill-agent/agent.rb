@@ -21,18 +21,25 @@ module Papermill
       @mutex     = Mutex.new
       @config    = YAML.load_file('config/papermill.yml')
       Thread.abort_on_exception = true
+
       @worker_thread = Thread.new do
         loop do
           if time_since_last_sent > 10
             send_data_to_papermill
             @last_sent = Time.now
           end
+          sleep_time = seconds_until_next_run
+          sleep sleep_time if sleep_time > 0
         end
       end
     end
 
     def time_since_last_sent
       Time.now - last_sent
+    end
+
+    def seconds_until_next_run
+      UPDATE_INTERVAL - time_since_last_sent
     end
 
     def send_data_to_papermill

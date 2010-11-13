@@ -42,9 +42,18 @@ module Papermill
       Time.stub!(:now => Time.mktime(2010, 11, 11, 0, 0, 9))
     end
 
-    it 'subtracts the current time from @last_sent' do
-      Agent.instance.time_since_last_sent.should == 9
+    context 'time since the last run' do
+      it 'subtracts the current time from @last_sent' do
+        Agent.instance.time_since_last_sent.should == 9
+      end
     end
+
+    context 'the time until the next run' do
+      it 'time until next = interval - time elapsed since last' do
+        Agent.instance.seconds_until_next_run.should == 1
+      end
+    end
+
   end
 
   describe 'configuration' do
