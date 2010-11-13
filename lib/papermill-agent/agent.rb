@@ -24,7 +24,7 @@ module Papermill
 
       @worker_thread = Thread.new do
         loop do
-          if time_since_last_sent > 10
+          if time_since_last_sent > UPDATE_INTERVAL
             p "sending #{Storage.store.count} requests to papermill..."
             send_data_to_papermill
             @last_sent = Time.now
@@ -45,7 +45,7 @@ module Papermill
 
     def send_data_to_papermill
       begin
-        Timeout.timeout(9) { do_request }
+        Timeout.timeout(9) { do_request unless Storage.store.empty? }
       rescue Timeout::Error
         p 'timeout error'
       end

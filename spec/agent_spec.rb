@@ -80,6 +80,12 @@ module Papermill
       RestClient.should_receive(:post).with(Agent::API_ENDPOINT, :api_key => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
       Agent.instance.send_data_to_papermill
     end
+
+    it 'should not send anything if no requests have been stored' do
+      Storage.clear
+      Agent.should_not_receive(:do_request)
+      Agent.instance.send_data_to_papermill
+    end
   end
 
 end
