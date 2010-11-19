@@ -2,6 +2,7 @@ require 'singleton'
 require 'timeout'
 require 'json'
 require 'restclient'
+require 'yaml'
 
 module Papermill
 
