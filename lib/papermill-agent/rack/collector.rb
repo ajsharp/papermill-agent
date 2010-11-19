@@ -12,8 +12,9 @@ module Papermill
 
     def call(env)
       status, headers, response = @app.call(env)
-      ResponseParser.parse(status, headers, response)
+      ResponseParser.parse(status, headers, response, env)
       [status, headers, response]
     end
   end
+
 end

@@ -1,39 +1,26 @@
 require 'spec_helper'
-require 'sinatra'
-
-class MockApp < Sinatra::Base
-  get '/' do
-    '<html><body>Hello, world!</body></html>'
-  end
-end
 
 module Papermill
 
-  describe 'parsing a response' do
-    let(:valid_response) { [200, {'Content-Type' => 'text/html'}, []] }
-    def do_request
-      request = Rack::MockRequest.new(MockApp)
-      request.get('/')
+  describe '.parse' do
+    before do
+      ResponseAdapters::Base.stub(:new).and_return(mock('object', :parse => nil))
+    end
+    context 'in a normal rack app' do
+      it 'uses the base adapter' do
+        ResponseAdapters::Base.should_receive(:new).and_return(mock('object', :parse => nil))
+        ResponseParser.parse(200, {}, [], {})
+      end
     end
 
-    def store
-      Storage.store.last
-    end
+    context 'in a rails app' do
+      class Rails
+      end
 
-    it "adds the parsed response to papermill's storage mechanism" do
-      lambda { 
-        ResponseParser.parse(*valid_response)
-      }.should change(Papermill::Storage.store, :count).by(1)
-    end
-
-    it "extracts the status code" do
-      ResponseParser.parse(*valid_response)
-      store[:status].should == 200
-    end
-
-    it "extracts the headers" do
-      ResponseParser.parse(*valid_response)
-      store[:headers].should == {'Content-Type' => 'text/html'}
+      it 'uses the rails adapter' do
+        ResponseAdapters::Rails.should_receive(:new).and_return(mock('object', :parse => nil))
+        ResponseParser.parse(200, {}, [], {})
+      end
     end
   end
 
