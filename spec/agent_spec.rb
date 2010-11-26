@@ -77,7 +77,7 @@ module Papermill
     end
 
     it 'sends a request to the papermill api endpoint' do
-      RestClient.should_receive(:post).with(Agent::API_ENDPOINT, :api_key => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
+      RestClient.should_receive(:post).with(Agent::API_ENDPOINT, :token => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
       Agent.instance.send_data_to_papermill
     end
 

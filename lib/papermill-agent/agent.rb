@@ -54,7 +54,7 @@ module Papermill
 
     def do_request
       begin
-        RestClient.post API_ENDPOINT, { :api_key => config['token'], :payload => jsonify_payload }
+        RestClient.post API_ENDPOINT, { :token => config['token'], :payload => jsonify_payload }
       rescue RestClient::Exception, Errno::ECONNREFUSED
         p 'transmission error ocurred...'
       end
