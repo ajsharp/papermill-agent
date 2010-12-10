@@ -19,6 +19,10 @@ module Papermill
       def clear
         store.clear
       end
+
+      def size
+        store.size
+      end
     end
   end
 

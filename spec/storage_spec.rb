@@ -19,6 +19,17 @@ module Papermill
     end
   end
 
+  describe 'determine the number of records stored' do
+    before do
+      Storage.store << 'record 1'
+      Storage.store << 'record 2'
+    end
+
+    it 'should be 2' do
+      Storage.size.should == 2
+    end
+  end
+
   describe 'emptying the cache' do
     before { Storage.clear }
 
