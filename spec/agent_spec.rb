@@ -62,13 +62,20 @@ module Papermill
     end
   end
 
-  describe 'sending data to papermill' do
+  describe 'given a logged request' do
     before do
       Storage.store << [{:headers => {'Content-Type' => 'text/html'}, :status => 200}]
     end
 
-    it 'jsonifies the payload data' do
-      Agent.instance.jsonify_payload.should == '[{"headers":{"Content-Type":"text/html"},"status":200}]'
+    describe 'serializing the payload' do
+      it 'jsonifies the payload data' do
+        Agent.instance.jsonify_payload.should == '[{"headers":{"Content-Type":"text/html"},"status":200}]'
+      end
+
+      it 'empties the store' do
+        Agent.instance.jsonify_payload
+        Storage.store.should be_empty
+      end
     end
 
     describe 'sending data to papermill' do
@@ -77,15 +84,25 @@ module Papermill
         Agent.instance.send_data_to_papermill
       end
 
-    it 'sends a request to the papermill api endpoint' do
-      RestClient.should_receive(:post).with(Agent::API_ENDPOINT, :token => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
-      Agent.instance.send_data_to_papermill
+      it 'should not send anything if no requests have been stored' do
+        Storage.clear
+        Agent.should_not_receive(:do_request)
+        Agent.instance.send_data_to_papermill
+      end
+
+      it 'logs something' do
+        Agent.instance.logger.should_receive(:info).with(/Sending 1 requests to papermill/)
+        Agent.instance.send_data_to_papermill
+      end
     end
 
-    it 'should not send anything if no requests have been stored' do
-      Storage.clear
-      Agent.should_not_receive(:do_request)
-      Agent.instance.send_data_to_papermill
+  end
+
+  describe 'the logger' do
+    before { Agent.instance.start }
+
+    it 'has a logger' do
+      Agent.instance.logger.should be_instance_of Papermill::Logger
     end
   end
 

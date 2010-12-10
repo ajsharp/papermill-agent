@@ -12,6 +12,7 @@ require 'papermill-agent'
 require 'fakeweb'
 
 FakeWeb.allow_net_connect = false
+FakeWeb.register_uri(:post, Papermill::API_ENDPOINT, {})
 
 RSpec.configure do |config|
   config.before(:each) do

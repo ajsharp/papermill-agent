@@ -12,12 +12,13 @@ module Papermill
     # send new request data every 10 seconds
     UPDATE_INTERVAL = 10
 
-    attr_reader :last_sent, :mutex, :config
+    attr_reader :last_sent, :mutex, :config, :logger
 
     def start
       @last_sent = Time.now
       @mutex     = Mutex.new
       @config    = YAML.load_file('config/papermill.yml')
+      @logger    = Logger.new
       Thread.abort_on_exception = true
 
       @worker_thread = Thread.new do
@@ -51,6 +52,7 @@ module Papermill
 
     def do_request
       begin
+        logger.info("#{Time.now}: Sending #{Storage.size} requests to papermill")
         RestClient.post API_ENDPOINT, { :token => config['token'], :payload => jsonify_payload }
       rescue RestClient::Exception, Errno::ECONNREFUSED
         p 'transmission error ocurred...'
