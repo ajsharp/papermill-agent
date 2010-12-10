@@ -2,6 +2,9 @@
 $:.unshift File.dirname(File.expand_path(__FILE__))
 
 module Papermill
+  # papermill endpoint which will receive client requests
+  API_ENDPOINT = 'http://api.papermillapp.com'
+
   autoload :Agent,          'papermill-agent/agent'
   autoload :Collector,      'papermill-agent/rack/collector'
   autoload :ResponseParser, 'papermill-agent/response_parser'

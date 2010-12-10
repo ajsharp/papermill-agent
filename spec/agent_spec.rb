@@ -32,7 +32,7 @@ module Papermill
   end
 
   describe 'the api endpoint' do
-    subject { Agent::API_ENDPOINT }
+    subject { Papermill::API_ENDPOINT }
     it { should == 'http://api.papermillapp.com' }
   end
 
@@ -71,10 +71,11 @@ module Papermill
       Agent.instance.jsonify_payload.should == '[{"headers":{"Content-Type":"text/html"},"status":200}]'
     end
 
-    it 'empties the store' do
-      Agent.instance.jsonify_payload
-      Storage.store.should be_empty
-    end
+    describe 'sending data to papermill' do
+      it 'sends a request to the papermill api endpoint' do
+        RestClient.should_receive(:post).with(Papermill::API_ENDPOINT, :token => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
+        Agent.instance.send_data_to_papermill
+      end
 
     it 'sends a request to the papermill api endpoint' do
       RestClient.should_receive(:post).with(Agent::API_ENDPOINT, :token => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')

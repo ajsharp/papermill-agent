@@ -8,9 +8,6 @@ module Papermill
 
   class Agent
     include Singleton
-
-    # papermill endpoint which will receive client requests
-    API_ENDPOINT = 'http://api.papermillapp.com'
     
     # send new request data every 10 seconds
     UPDATE_INTERVAL = 10
