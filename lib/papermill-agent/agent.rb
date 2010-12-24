@@ -51,6 +51,8 @@ module Papermill
     def send_data_to_papermill
       begin
         Timeout.timeout(self.class.request_timeout) { do_request unless Storage.store.empty? }
+      rescue Timeout::Error => e
+        logger.log_exception(e)
       end
     end
 
@@ -58,8 +60,8 @@ module Papermill
       begin
         logger.info("#{Time.now}: Sending #{Storage.size} requests to papermill")
         RestClient.post API_ENDPOINT, { :token => config['token'], :payload => jsonify_payload }
-      rescue RestClient::Exception, Errno::ECONNREFUSED
-        p 'transmission error ocurred...'
+      rescue RestClient::Exception, Errno::ECONNREFUSED, SocketError => e
+        logger.log_exception e
       end
     end
 
@@ -69,8 +71,11 @@ module Papermill
     # TODO: move this to the Storage class.
     def jsonify_payload
       mutex.synchronize do
-        json_data = JSON.generate(Storage.store.flatten)
-        Storage.clear
+        begin
+          json_data = ::JSON.generate(Storage.store.flatten)
+        rescue Exception => e
+          logger.log_exception(e)
+        end
         return json_data
       end
     end

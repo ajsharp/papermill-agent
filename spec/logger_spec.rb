@@ -21,4 +21,17 @@ module Papermill
       end
     end
   end
+
+  describe '#log_error' do
+    let(:logger) { Logger.new($stdout) }
+    let(:exception) { mock('Exception', :message => 'msg', :backtrace => ['...']) }
+
+    it 'records the message and the backtrace of the exception' do
+      logger.should_receive(:error)
+      exception.should_receive(:message)
+      exception.should_receive(:backtrace)
+
+      logger.log_exception(exception)
+    end
+  end
 end
