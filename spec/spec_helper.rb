@@ -15,6 +15,11 @@ FakeWeb.allow_net_connect = false
 FakeWeb.register_uri(:post, Papermill::API_ENDPOINT, {})
 
 RSpec.configure do |config|
+  def agent
+    Papermill::Agent.instance
+  end
+
+  config.mock_with :rspec
   config.before(:each) do
     # clear the storage before each example
     Papermill::Storage.clear
