@@ -14,6 +14,12 @@ module Papermill
 
     attr_reader :last_sent, :mutex, :config, :logger
 
+    # request timeout threshold for sending data to papermill
+    @@request_timeout = 5
+    def self.request_timeout
+      @@request_timeout
+    end
+
     def start
       @last_sent = Time.now
       @mutex     = Mutex.new
@@ -44,9 +50,7 @@ module Papermill
 
     def send_data_to_papermill
       begin
-        Timeout.timeout(9) { do_request unless Storage.store.empty? }
-      rescue Timeout::Error
-        p 'timeout error'
+        Timeout.timeout(self.class.request_timeout) { do_request unless Storage.store.empty? }
       end
     end
 

@@ -36,6 +36,12 @@ module Papermill
     it { should == 'http://api.papermillapp.com' }
   end
 
+  describe 'request timeout interval' do
+    it 'defaults to 5 seconds' do
+      Agent.request_timeout.should == 5
+    end
+  end
+
   describe 'determining the time since the last time data was sent to papermill' do
     before do
       agent.stub!(:last_sent => Time.mktime(2010, 11, 11, 0, 0, 0))
