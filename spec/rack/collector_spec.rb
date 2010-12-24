@@ -4,15 +4,18 @@ require 'sinatra'
 
 module Papermill
 
-  describe 'collecting statistics via the middleware layer' do
-    before do
-      @app = Sinatra.new Sinatra::Application do
+  describe 'collecting statistics with Collector' do
+    def app
+      @app ||= Sinatra.new Sinatra::Application do
         get '/' do
           '<html><body>Hello, world!</body></html>'
         end
-      end
-      @app.use Papermill::Collector
 
+        use Papermill::Collector
+      end
+    end
+
+    before do
       request_headers = {'HTTP_USER_AGENT' => 'agent', 'REMOTE_ADDR' => '0.0.0.0', 
         'QUERY_STRING' => 'q=search',
         'SCRIPT_NAME'  => 'my-script',
@@ -24,7 +27,8 @@ module Papermill
       }
 
       Time.stub(:now => Time.utc(2010, 01, 01))
-      @status, @headers, @body = @app.call(Rack::MockRequest.env_for('/', request_headers))
+      @status, @headers, @body = app.call(Rack::MockRequest.env_for('/', request_headers))
+    end
     end
     
     def last_store
