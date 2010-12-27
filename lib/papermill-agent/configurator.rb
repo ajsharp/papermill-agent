@@ -29,7 +29,7 @@ module Papermill
     end
 
     def environment
-      (defined?(Rails) && Rails.env) || ENV['RACK_ENV'] || 'development'
+      @environment ||= (defined?(Rails) && Rails.env) || ENV['RACK_ENV'] || 'development'
     end
 
     private
