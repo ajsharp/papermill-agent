@@ -21,7 +21,7 @@ module Papermill
     end
 
     def endpoint
-      if (config[environment] && config[environment]['endpoint']) && environment != 'production'
+      if has_config_for_environment?('endpoint') && environment != 'production'
         config[environment]['endpoint']
       else
         API_ENDPOINT
@@ -33,8 +33,13 @@ module Papermill
     end
 
     private
+
     def config
       @config
+    end
+
+    def has_config_for_environment?(var)
+      config[environment] && config[environment][var]
     end
   end
 end
