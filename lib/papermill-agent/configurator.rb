@@ -1,0 +1,40 @@
+require 'yaml'
+
+module Papermill
+
+  class Configurator
+    def initialize(config_source = 'config/papermill.yml')
+      load_config(config_source)
+    end
+
+    def load_config(config_source)
+      @config = case
+      when config_source.class == String
+        YAML.load_file(config_source)
+      when config_source.class == Hash
+        config_source
+      end
+    end
+
+    def token
+      config['token']
+    end
+
+    def endpoint
+      if (config[environment] && config[environment]['endpoint']) && environment != 'production'
+        config[environment]['endpoint']
+      else
+        API_ENDPOINT
+      end
+    end
+
+    def environment
+      (defined?(Rails) && Rails.env) || ENV['RACK_ENV'] || 'development'
+    end
+
+    private
+    def config
+      @config
+    end
+  end
+end

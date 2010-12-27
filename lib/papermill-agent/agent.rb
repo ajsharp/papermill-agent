@@ -2,7 +2,6 @@ require 'singleton'
 require 'timeout'
 require 'json'
 require 'restclient'
-require 'yaml'
 
 module Papermill
 
@@ -23,7 +22,7 @@ module Papermill
     def start
       @last_sent = Time.now
       @mutex     = Mutex.new
-      @config    = YAML.load_file('config/papermill.yml')
+      @config    = Configurator.new
       @logger    = Logger.new
       Thread.abort_on_exception = true
 
