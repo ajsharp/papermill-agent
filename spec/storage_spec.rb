@@ -2,6 +2,22 @@ require 'spec_helper'
 
 module Papermill
 
+  describe 'determining if the storage has items in it' do
+    subject { Storage.empty? }
+
+    context 'when a request has been added to the storage' do
+      before { Storage.store << ['something worth saving'] }
+
+      it { should == false }
+    end
+
+    context 'when no requests have been added to the storage' do
+      before { Storage.clear }
+
+      it { should == true }
+    end
+  end
+
   describe 'adding an item to the local data storage' do
     it 'acts like an array' do
       Storage.store.should respond_to(:<<)

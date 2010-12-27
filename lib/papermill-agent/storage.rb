@@ -23,6 +23,10 @@ module Papermill
       def size
         store.size
       end
+
+      def empty?
+        store.empty?
+      end
     end
   end
 
