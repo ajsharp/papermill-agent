@@ -39,17 +39,11 @@ module Papermill
       end
     end
 
-    def time_since_last_sent
-      Time.now - last_sent
-    end
-
-    def seconds_until_next_run
-      UPDATE_INTERVAL - time_since_last_sent
-    end
-
     def send_data_to_papermill
       begin
-        Timeout.timeout(self.class.request_timeout) { do_request unless Storage.store.empty? }
+        Timeout.timeout(self.class.request_timeout) do
+          do_request if !Storage.empty? && config.live_mode
+        end
       rescue Timeout::Error => e
         logger.log_exception(e)
       end
@@ -63,6 +57,15 @@ module Papermill
       rescue RestClient::Exception, Errno::ECONNREFUSED, SocketError => e
         logger.log_exception e
       end
+    end
+
+
+    def time_since_last_sent
+      Time.now - last_sent
+    end
+
+    def seconds_until_next_run
+      UPDATE_INTERVAL - time_since_last_sent
     end
 
     # Return a json version of the storage array.

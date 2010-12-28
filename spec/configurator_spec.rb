@@ -116,6 +116,48 @@ module Papermill
     end
   end
 
+  describe 'determining whether or not to send data to papermill' do
+    context 'for a production environment' do
+      let(:config) { Configurator.new }
+      before { config.environment = 'production' }
+
+      context 'by default' do
+        it 'is true' do
+          config.live_mode.should == true
+        end
+      end
+
+      context 'when a config override is specified with a value of false' do
+        let(:config) { Configurator.new({'production' => {'live_mode' => false}}) }
+
+        it 'does not send data to papermill' do
+          config.environment.should == 'production'
+          config.live_mode.should == false
+        end
+      end
+    end
+
+    context 'for a non-production environment' do
+      context 'by default' do
+        let(:config) { Configurator.new }
+        before { config.environment = 'non-production' }
+
+        it 'is false' do
+          config.live_mode.should == false
+        end
+      end
+
+      context 'when an environment override is specified' do
+        let(:config) { Configurator.new('non-production' => {'live_mode' => true}) }
+        before { config.environment = 'non-production' }
+
+        it 'uses that setting' do
+          config.live_mode.should == true
+        end
+      end
+    end
+  end
+
   describe 'retrieving a setting for the current environment' do
     context 'for a given environment' do
       let(:config) { Configurator.new({'production' => {'my key' => 'my val'}}) }

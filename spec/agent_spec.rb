@@ -29,6 +29,120 @@ module Papermill
       end
     end
 
+    context 'when in a production environment' do
+      before { agent.config.stub(:environment => 'production') }
+
+      context 'and the storage is empty' do
+        before { Storage.clear }
+
+        it 'does not send anything to papermill' do
+          agent.should_not_receive(:do_request)
+          agent.send_data_to_papermill
+        end
+      end
+
+      context 'and the storage is not empty' do
+        before { Storage.store << ['an item'] }
+
+        it 'sends data to papermill' do
+          agent.should_receive(:do_request)
+          agent.send_data_to_papermill
+        end
+      end
+    end
+
+    context 'when in a non-production environment' do
+      before { agent.config.environment = 'non-production' }
+
+      context 'and there is no config over-ride to log requests in that environment' do
+        context 'and the storage is not empty' do
+          before { Storage.store << [{:headers => {'Content-Type' => 'text/html'}, :status => 200}] }
+
+          it 'does not send data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+
+        context 'and the storage is empty' do
+          before { Storage.clear }
+
+          it 'does not send data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+      end
+
+      context 'and there is a config over-ride present for that environment' do
+        before { agent.config.stub!(:live_mode => true) }
+
+        context 'when the storage is empty' do
+          before { Storage.clear }
+
+          it 'sends data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+
+        context 'when the storage is not empty' do
+          before { Storage.store << [{:headers => {'Content-Type' => 'text/html'}, :status => 200}] }
+
+          it 'sends data to papermill' do
+            agent.should_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+      end
+    end
+
+    context 'when in a production environment' do
+      before { agent.config.environment = 'production' }
+
+      context 'by default' do
+        context 'when requests have been logged' do
+          before { Storage.store << [{:headers => {'Content-Type' => 'text/html'}, :status => 200}] }
+
+          it 'sends request data to the papermill api' do
+            agent.should_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+
+        context 'when no requests have been logged' do
+          before { Storage.clear }
+
+          it 'does not send data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+      end
+
+      context 'if a config over-ride is specified to not send data to papermill' do
+        before { agent.config.stub!(:live_mode => false) }
+
+        context 'when requests have been logged' do
+          before { Storage.store << [{:headers => {'Content-Type' => 'text/html'}, :status => 200}] }
+
+          it 'does not send data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+
+        context 'when no requests have been logged' do
+          before { Storage.clear }
+
+          it 'does not send data to papermill' do
+            agent.should_not_receive(:do_request)
+            agent.send_data_to_papermill
+          end
+        end
+      end
+    end
+
   end
 
   describe 'the api endpoint' do
@@ -79,6 +193,8 @@ module Papermill
     end
 
     describe 'sending data to papermill' do
+      before { agent.config.stub!(:environment => 'production') }
+
       it 'empties the store' do
         agent.send_data_to_papermill
         Storage.store.should be_empty

@@ -36,6 +36,14 @@ module Papermill
       config[environment] && config[environment][name]
     end
 
+    def live_mode
+      if has_config_for_environment?('live_mode')
+        setting('live_mode')
+      else
+        # default to true for production environments, false otherwise
+        environment == 'production' ? true : false
+      end
+    end
 
     def environment
       @environment ||= (defined?(Rails) && Rails.env) || ENV['RACK_ENV'] || 'development'
@@ -43,6 +51,7 @@ module Papermill
 
     private
 
+    # holds the internal config hash
     def config
       @config
     end
