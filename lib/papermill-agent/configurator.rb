@@ -23,13 +23,17 @@ module Papermill
     end
 
     def endpoint
-      if has_config_for_environment?('endpoint') && environment != 'production'
+      if setting('endpoint') && environment != 'production'
         config[environment]['endpoint']
       else
         API_ENDPOINT
       end
     end
 
+    # returns the value of a setting for the current environment or nil, 
+    # if it does not exist.
+    def setting(name)
+      config[environment] && config[environment][name]
     end
 
 
@@ -44,7 +48,7 @@ module Papermill
     end
 
     def has_config_for_environment?(var)
-      config[environment] && config[environment][var]
+      config[environment] && config[environment].has_key?(var)
     end
   end
 end

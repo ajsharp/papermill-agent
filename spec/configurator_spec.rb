@@ -116,5 +116,22 @@ module Papermill
     end
   end
 
+  describe 'retrieving a setting for the current environment' do
+    context 'for a given environment' do
+      let(:config) { Configurator.new({'production' => {'my key' => 'my val'}}) }
+      before { config.environment = 'production' }
+
+      context 'for a setting that has a value' do
+        it 'returns the value of the setting identified by the name' do
+          config.setting('my key').should == 'my val'
+        end
+      end
+
+      context 'for a setting that does not have a value' do
+        it 'returns nil' do
+          config.setting('does not exist').should == nil
+        end
+      end
+    end
 
 end
