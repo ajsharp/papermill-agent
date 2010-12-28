@@ -177,7 +177,7 @@ module Papermill
 
   describe 'configuration' do
     it 'provides access to the api token' do
-      agent.config['token'].should == 'api-key'
+      agent.config.token.should == 'api-key'
     end
   end
 
@@ -224,6 +224,13 @@ module Papermill
 
     it 'has a logger' do
       agent.logger.should be_instance_of Papermill::Logger
+    end
+  end
+
+  describe 'starting the agent' do
+    it 'loads the configurator' do
+      agent.start
+      agent.config.should be_instance_of Configurator
     end
   end
 
