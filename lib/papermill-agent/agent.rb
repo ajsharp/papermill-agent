@@ -52,7 +52,7 @@ module Papermill
     def do_request
       begin
         logger.info("#{Time.now}: Sending #{Storage.size} requests to papermill")
-        RestClient.post API_ENDPOINT, { :token => config['token'], :payload => jsonify_payload }
+        RestClient.post config.endpoint, { :token => config.token, :payload => jsonify_payload }
         Storage.clear
       rescue RestClient::Exception, Errno::ECONNREFUSED, SocketError => e
         logger.log_exception e
