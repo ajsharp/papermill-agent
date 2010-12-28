@@ -3,6 +3,8 @@ require 'yaml'
 module Papermill
 
   class Configurator
+    attr_writer :environment
+
     def initialize(config_source = 'config/papermill.yml')
       load_config(config_source)
     end
@@ -27,6 +29,9 @@ module Papermill
         API_ENDPOINT
       end
     end
+
+    end
+
 
     def environment
       @environment ||= (defined?(Rails) && Rails.env) || ENV['RACK_ENV'] || 'development'

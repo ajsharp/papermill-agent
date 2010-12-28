@@ -107,5 +107,14 @@ module Papermill
     end
   end
 
+  describe 'setting the environment' do
+    let(:configurator) { Configurator.new }
+    before { configurator.environment = 'some environment' }
+
+    it 'allows manual setting of the envionment' do
+      configurator.environment.should == 'some environment'
+    end
+  end
+
 
 end
