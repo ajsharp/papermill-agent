@@ -24,12 +24,12 @@ module Papermill
       @mutex     = Mutex.new
       @config    = Configurator.new
       @logger    = Logger.new
+      logger.info "\n\n=============== Starting papermill-agent at #{Time.now} in process #{Process.pid}"
       Thread.abort_on_exception = true
 
       @worker_thread = Thread.new do
         loop do
           if time_since_last_sent > UPDATE_INTERVAL
-            p "sending #{Storage.store.count} requests to papermill..."
             send_data_to_papermill
             @last_sent = Time.now
           end
@@ -58,7 +58,6 @@ module Papermill
         logger.log_exception e
       end
     end
-
 
     def time_since_last_sent
       Time.now - last_sent
