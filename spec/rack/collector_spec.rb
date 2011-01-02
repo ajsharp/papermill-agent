@@ -23,12 +23,17 @@ module Papermill
         'HTTP_HOST'    => 'localhost',
         'REQUEST_URI'  => 'i-requested-this',
         'REMOTE_HOST'  => '123.345.34.2',
-        'SERVER_SOFTWARE' => 'apache'
+        'SERVER_SOFTWARE' => 'apache',
+        'HTTP_REFERER' => 'previous url'
       }
 
       Time.stub(:now => Time.utc(2010, 01, 01))
       @status, @headers, @body = app.call(Rack::MockRequest.env_for('/', request_headers))
     end
+
+    context 'for a 304 response' do
+      it 'records the status code'
+      it 'doesnt attempt to save any headers'
     end
     
     def last_store
@@ -46,7 +51,7 @@ module Papermill
     it 'records request duration'
 
     it 'records the request time' do
-      last_store[:request_time].should == Time.utc(2010, 01, 01)
+      last_store['request_time'].should == Time.utc(2010, 01, 01)
     end
 
     it 'records the path info' do
@@ -97,8 +102,16 @@ module Papermill
       headers['REMOTE_HOST'].should == '123.345.34.2'
     end
 
+    it 'records the http referrer' do
+      headers['HTTP_REFERER'].should == 'previous url'
+    end
+
+    it 'does not save any keys with a period in the name' do
+      headers.keys.detect { |k| k =~ /\./ }.should == nil
+    end
+
     it 'records the url scheme' do
-      headers['rack.url_scheme'].should == 'http'
+      headers['URL_SCHEME'].should == 'http'
     end
 
     context 'for a 304 response' do
