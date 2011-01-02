@@ -4,8 +4,8 @@ module Papermill
 
     class Base
       attr_reader :status, :headers, :response, :env
-      def initialize(*args)
-        @status, @headers, @response, @env = args.flatten
+      def initialize(status, headers, response, env = {})
+        @status, @headers, @response, @env = status, headers, response, env
       end
 
       def parse
