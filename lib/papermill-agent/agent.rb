@@ -41,7 +41,7 @@ module Papermill
 
     def send_data_to_papermill
       begin
-        Timeout.timeout(self.class.request_timeout) do
+        Timeout.timeout(config.setting('request_timout') || self.class.request_timeout) do
           do_request if !Storage.empty? && config.live_mode
         end
       rescue Timeout::Error => e
