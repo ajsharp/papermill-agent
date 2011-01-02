@@ -74,8 +74,8 @@ module Papermill
     def jsonify_payload
       mutex.synchronize do
         begin
-          json_data = ::JSON.generate(Storage.store.flatten)
-        rescue Exception => e
+          json_data = Storage.store.flatten.to_json
+        rescue => e
           logger.log_exception(e)
         end
         return json_data
