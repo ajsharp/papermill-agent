@@ -28,4 +28,8 @@ RSpec.configure do |config|
     # clear the storage before each example
     Papermill::Storage.clear
   end
+
+  config.after(:each) do
+    agent.disabled = false
+  end
 end
