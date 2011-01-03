@@ -32,14 +32,16 @@ module Papermill
       logger.info "\n\n=============== Starting papermill-agent at #{Time.now} in process #{Process.pid}"
       Thread.abort_on_exception = true
 
-      @worker_thread = Thread.new do
-        loop do
-          if time_since_last_sent > UPDATE_INTERVAL
-            send_data_to_papermill
-            @last_sent = Time.now
+      unless disabled?
+        @worker_thread = Thread.new do
+          loop do
+            if time_since_last_sent > UPDATE_INTERVAL
+              send_data_to_papermill
+              @last_sent = Time.now
+            end
+            sleep_time = seconds_until_next_run
+            sleep sleep_time if sleep_time > 0
           end
-          sleep_time = seconds_until_next_run
-          sleep sleep_time if sleep_time > 0
         end
       end
     end
