@@ -8,6 +8,35 @@ module Papermill
         YAML.should_receive(:load_file).with('filename')
         Configurator.new('filename')
       end
+
+      context 'the config file does not exist' do
+        after { agent.disabled = false }
+
+        it 'disables the agent' do
+          lambda {
+            Configurator.new('does not exist')
+          }.should change(agent, :disabled?).to(true)
+        end
+
+        it 'does not raise a file load error' do
+          lambda {
+            Configurator.new('does not exist')
+          }.should_not raise_error(Errno::ENOENT)
+        end
+
+        it 'sets config to nil' do
+          config = Configurator.new('does not exist')
+          config.send(:config).should be_nil
+        end
+      end
+
+      context 'when no token key is found' do
+        it 'disables the agent' do
+          lambda {
+            Configurator.new({})
+          }.should change(agent, :disabled?).to(true)
+        end
+      end
     end
 
     context 'when a hash is passed in' do
@@ -22,14 +51,19 @@ module Papermill
   end
 
   describe 'given a configurator instance' do
-    let(:configurator) do
-      YAML.stub!(:load_file).and_return({'token' => 'token'})
-      Configurator.new 
-    end
-
     describe 'the token' do
-      it 'should return the token from the config' do
-        configurator.token.should == 'token'
+      subject { config.token }
+
+      context 'when the token exists' do
+        let(:config) { Configurator.new({'token' => 'token'}) }
+
+        it { should == 'token' }
+      end
+
+      context 'when the token does not exist' do
+        let(:config) { Configurator.new({}) }
+
+        it { should be_nil }
       end
     end
 
@@ -159,8 +193,9 @@ module Papermill
   end
 
   describe 'retrieving a setting for the current environment' do
+    let(:config) { Configurator.new({'production' => {'my key' => 'my val'}}) }
+
     context 'for a given environment' do
-      let(:config) { Configurator.new({'production' => {'my key' => 'my val'}}) }
       before { config.environment = 'production' }
 
       context 'for a setting that has a value' do

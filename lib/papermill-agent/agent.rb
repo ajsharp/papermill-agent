@@ -12,6 +12,7 @@ module Papermill
     UPDATE_INTERVAL = 10
 
     attr_reader :last_sent, :mutex, :config, :logger
+    attr_accessor :disabled
 
     # request timeout threshold for sending data to papermill
     @@request_timeout = 5
@@ -19,11 +20,15 @@ module Papermill
       @@request_timeout
     end
 
+    def disabled?
+      !!disabled
+    end
+
     def start
       @last_sent = Time.now
       @mutex     = Mutex.new
-      @config    = Configurator.new
       @logger    = Logger.new
+      @config    = Configurator.new
       logger.info "\n\n=============== Starting papermill-agent at #{Time.now} in process #{Process.pid}"
       Thread.abort_on_exception = true
 

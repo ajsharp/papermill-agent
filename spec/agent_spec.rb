@@ -234,5 +234,30 @@ module Papermill
     end
   end
 
+  describe 'disabling the papermill agent' do
+    context 'when disabled is set to true' do
+      before { agent.disabled = true  }
+      after  { agent.disabled = false }
+
+      it 'is disabled' do
+        agent.should be_disabled
+      end
+    end
+
+    context 'wen disabled is set to false' do
+      before { agent.disabled = false }
+
+      it 'is disabled' do
+        agent.should_not be_disabled
+      end
+    end
+
+    context 'by default' do
+      it 'is not disabled' do
+        agent.should_not be_disabled
+      end
+    end
+  end
+
 end
 
