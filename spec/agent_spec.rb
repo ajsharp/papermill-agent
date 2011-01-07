@@ -147,7 +147,7 @@ module Papermill
 
   describe 'the api endpoint' do
     subject { Papermill::API_ENDPOINT }
-    it { should == 'http://api.papermillapp.com' }
+    it { should == 'http://papermillapp.com/api' }
   end
 
   describe 'request timeout interval' do
