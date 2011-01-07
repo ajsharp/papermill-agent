@@ -1,3 +1,6 @@
+# 0.1.0
+* Added ruby 1.8 compatibility.
+
 # 0.0.2
 * Configuration is managed by the Configurator class.
 * Added the ability to over-ride the endpoint in non-production environments.
