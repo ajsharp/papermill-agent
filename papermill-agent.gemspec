@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.md"
   ]
-  s.files = Dir.glob(["lib/**/*"]) + %w(LICENSE README.md examples/papermill.sample.yml Gemfile Rakefile)
+  s.files = Dir.glob(["lib/**/*"]) + %w(LICENSE README.md example/papermill.sample.yml Gemfile Rakefile)
   s.require_paths = ["lib"]
   s.executables = []
   s.test_files = Dir.glob(['spec/**/*'])
