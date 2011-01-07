@@ -1,6 +1,9 @@
-.rvmrc
+.autotest
 .bundle
-Gemfile.lock
+.rspec
+.rvmrc
+autotest
 config/papermill.yml
+Gemfile.lock
 pkg
 log
