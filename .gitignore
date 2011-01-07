@@ -1,5 +1,6 @@
 .rvmrc
 .bundle
+Gemfile.lock
 config/papermill.yml
 pkg
 log
