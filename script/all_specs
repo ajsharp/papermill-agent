@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rvm 1.8.7
+bundle install
+rake
+
+rvm 1.9.2
+bundle install
+rake
+
+# rvm jruby
+# bundle install
+# rake
+# 
+# rvm rbx
+# bundle install
+# rake
