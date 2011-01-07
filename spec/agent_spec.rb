@@ -188,7 +188,7 @@ module Papermill
 
     describe 'serializing the payload' do
       it 'jsonifies the payload data' do
-        agent.jsonify_payload.should == '[{"headers":{"Content-Type":"text/html"},"status":200}]'
+        agent.jsonify_payload.should == Storage.store.flatten.to_json
       end
     end
 
@@ -201,7 +201,7 @@ module Papermill
       end
 
       it 'sends a request to the papermill api endpoint' do
-        RestClient.should_receive(:post).with(Papermill::API_ENDPOINT, :token => 'api-key', :payload => '[{"headers":{"Content-Type":"text/html"},"status":200}]')
+        RestClient.should_receive(:post).with(Papermill::API_ENDPOINT, :token => 'api-key', :payload => Storage.store.flatten.to_json)
         agent.send_data_to_papermill
       end
 
