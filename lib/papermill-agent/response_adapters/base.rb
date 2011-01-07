@@ -30,11 +30,15 @@ module Papermill
       end
 
       def extract_env_info
-        result_hash = env.select { |key, value| ENV_CAPTURE_FIELDS.include?(key) }
+        result_hash = {}
+
+        # Hash#select returns an array in 1.8, so we have to do some manual
+        # iteration to extract the key/value pairs from the environment hash.
+        ENV_CAPTURE_FIELDS.each { |key| result_hash[key] = env[key] }
 
         # rename rack.* keys b/c mongo does not allow key names containing a .
-        rack_keys = ENV_CAPTURE_FIELDS.select { |key| key =~ /^rack\./ }
-        rack_keys.each do |key|
+        naughty_rack_keys = ENV_CAPTURE_FIELDS.select { |key| key =~ /^rack\./ }
+        naughty_rack_keys.each do |key|
           new_key = key.gsub(/^rack\./, '').upcase
           result_hash[new_key] = result_hash.delete(key)
         end
