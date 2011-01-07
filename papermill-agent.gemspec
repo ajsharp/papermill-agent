@@ -13,10 +13,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency("json_pure")
 
   s.extra_rdoc_files = [
-    "README.md",
-    "doc/ideas.md"
+    "README.md"
   ]
-  s.files = Dir.glob(["lib/**/*"]) + %w(LICENSE README.md config/papermill.sample.yml Gemfile Rakefile)
+  s.files = Dir.glob(["lib/**/*"]) + %w(LICENSE README.md examples/papermill.sample.yml Gemfile Rakefile)
   s.require_paths = ["lib"]
   s.executables = []
   s.test_files = Dir.glob(['spec/**/*'])
