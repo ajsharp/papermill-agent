@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.summary = "The client agent for papermillapp.com"
   s.description = "The client agent for papermillapp.com"
   s.add_runtime_dependency("rest-client", ["~>1.6.1"])
+  s.add_runtime_dependency("json_pure")
 
   s.extra_rdoc_files = [
     "README.md",
