@@ -3,7 +3,7 @@ require 'logger'
 module Papermill
   class Logger < ::Logger
     def initialize(io_object = 'log/papermill.log')
-      FileUtils.mkdir('log') unless Dir.exists?('log')
+      FileUtils.mkdir('log') unless File.exists?('log')
       super(io_object)
     end
 
